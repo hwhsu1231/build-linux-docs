@@ -55,3 +55,13 @@ jobs:
           cd linux
           ./scripts/sphinx-pre-install
           make htmldocs
+
+      - name: Deploy to 'gh-pages' branch
+        if: ${{ inputs.DEPLOY_HTML }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ steps.ggat.outputs.token }}
+          branch: gh-pages
+          folder: ./linux/Documentation/output
+          target-folder: .
+          clean: false
