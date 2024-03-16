@@ -55,7 +55,9 @@ jobs:
 
       - name: Build Linux Kernel Documentation
         run: |
+          echo "cwd: $(cwd)"
           cd linux
+          echo "cwd: $(cwd)"
           ./scripts/sphinx-pre-install
           # make htmldocs
           # cmd_sphinx = $(MAKE) BUILDDIR=$(abspath $(BUILDDIR)) $(build)=Documentation/userspace-api/media $2 && \
@@ -76,11 +78,11 @@ jobs:
           # fi
           sphinx-build \
           -b html \
-          -c Documentation \
           -D version=6.8.0 \
           -D release=6.8.0 \
           -D kerneldoc_srctree=$(cwd) \
           -D kerneldoc_bin=$(cwd)/scripts/kernel-doc \
+          -c $(cwd)/Documentation \
           $(cwd)/Documentation \
           $(cwd)/Documentation/output
 
