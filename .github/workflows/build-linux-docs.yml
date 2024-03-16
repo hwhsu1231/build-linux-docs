@@ -32,70 +32,66 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
-      - name: Check pwd
+      - name: Install the Prerequisites
+        run: |
+          sudo apt update
+          sudo apt install \
+            dvipng \
+            fonts-noto-cjk \
+            graphviz \
+            imagemagick \
+            latexmk \
+            librsvg2-bin \
+            python3 \
+            python3-pip \
+            python3-sphinx \
+            python3-virtualenv \
+            texlive-lang-chinese \
+            texlive-xetex
+
+      - name: Clone the Linux Kernel Repository
+        run: |
+          git clone --depth=1 --branch=v6.8 https://github.com/torvalds/linux.git linux
+
+      - name: Build Linux Kernel Documentation
         run: |
           echo "pwd: $(pwd)"
-
-      # - name: Install the Prerequisites
-      #   run: |
-      #     sudo apt update
-      #     sudo apt install \
-      #       dvipng \
-      #       fonts-noto-cjk \
-      #       graphviz \
-      #       imagemagick \
-      #       latexmk \
-      #       librsvg2-bin \
-      #       python3 \
-      #       python3-pip \
-      #       python3-sphinx \
-      #       python3-virtualenv \
-      #       texlive-lang-chinese \
-      #       texlive-xetex
-
-      # - name: Clone the Linux Kernel Repository
-      #   run: |
-      #     git clone --depth=1 --branch=v6.8 https://github.com/torvalds/linux.git linux
-
-      # - name: Build Linux Kernel Documentation
-      #   run: |
-      #     echo "pwd: $(pwd)"
-      #     cd linux
-      #     echo "pwd: $(pwd)"
-      #     ./scripts/sphinx-pre-install
-      #     # make htmldocs
-      #     # cmd_sphinx = $(MAKE) BUILDDIR=$(abspath $(BUILDDIR)) $(build)=Documentation/userspace-api/media $2 && \
-      #     # PYTHONDONTWRITEBYTECODE=1 \
-      #     # BUILDDIR=$(abspath $(BUILDDIR)) SPHINX_CONF=$(abspath $(srctree)/$(src)/$5/$(SPHINX_CONF)) \
-      #     # $(PYTHON3) $(srctree)/scripts/jobserver-exec \
-      #     # $(CONFIG_SHELL) $(srctree)/Documentation/sphinx/parallel-wrapper.sh \
-      #     # $(SPHINXBUILD) \
-      #     # -b $2 \
-      #     # -c $(abspath $(srctree)/$(src)) \
-      #     # -d $(abspath $(BUILDDIR)/.doctrees/$3) \
-      #     # -D version=$(KERNELVERSION) -D release=$(KERNELRELEASE) \
-      #     # $(ALLSPHINXOPTS) \
-      #     # $(abspath $(srctree)/$(src)/$5) \
-      #     # $(abspath $(BUILDDIR)/$3/$4) && \
-      #     # if [ "x$(DOCS_CSS)" != "x" ]; then \
-      #     #   cp $(if $(patsubst /%,,$(DOCS_CSS)),$(abspath $(srctree)/$(DOCS_CSS)),$(DOCS_CSS)) $(BUILDDIR)/$3/_static/; \
-      #     # fi
-      #     sphinx-build \
-      #     -b html \
-      #     -D version=6.8.0 \
-      #     -D release=6.8.0 \
-      #     -D kerneldoc_srctree=$(pwd) \
-      #     -D kerneldoc_bin=$(pwd)/scripts/kernel-doc \
-      #     -c $(pwd)/Documentation \
-      #     $(pwd)/Documentation \
-      #     $(pwd)/Documentation/output
+          cd linux
+          echo "pwd: $(pwd)"
+          ./scripts/sphinx-pre-install
+          # make htmldocs
+          # cmd_sphinx = $(MAKE) BUILDDIR=$(abspath $(BUILDDIR)) $(build)=Documentation/userspace-api/media $2 && \
+          # PYTHONDONTWRITEBYTECODE=1 \
+          # BUILDDIR=$(abspath $(BUILDDIR)) SPHINX_CONF=$(abspath $(srctree)/$(src)/$5/$(SPHINX_CONF)) \
+          # $(PYTHON3) $(srctree)/scripts/jobserver-exec \
+          # $(CONFIG_SHELL) $(srctree)/Documentation/sphinx/parallel-wrapper.sh \
+          # $(SPHINXBUILD) \
+          # -b $2 \
+          # -c $(abspath $(srctree)/$(src)) \
+          # -d $(abspath $(BUILDDIR)/.doctrees/$3) \
+          # -D version=$(KERNELVERSION) -D release=$(KERNELRELEASE) \
+          # $(ALLSPHINXOPTS) \
+          # $(abspath $(srctree)/$(src)/$5) \
+          # $(abspath $(BUILDDIR)/$3/$4) && \
+          # if [ "x$(DOCS_CSS)" != "x" ]; then \
+          #   cp $(if $(patsubst /%,,$(DOCS_CSS)),$(abspath $(srctree)/$(DOCS_CSS)),$(DOCS_CSS)) $(BUILDDIR)/$3/_static/; \
+          # fi
+          sphinx-build \
+          -b html \
+          -D version=6.8.0 \
+          -D release=6.8.0 \
+          -D kerneldoc_srctree=$(pwd) \
+          -D kerneldoc_bin=$(pwd)/scripts/kernel-doc \
+          -c $(pwd)/Documentation \
+          $(pwd)/Documentation \
+          $(pwd)/Documentation/output
 
 
-      # - name: Deploy to 'gh-pages' branch
-      #   uses: JamesIves/github-pages-deploy-action@v4
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     branch: gh-pages
-      #     folder: ./linux/Documentation/output
-      #     target-folder: .
-      #     clean: false
+      - name: Deploy to 'gh-pages' branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: ./linux/Documentation/output
+          target-folder: .
+          clean: false
