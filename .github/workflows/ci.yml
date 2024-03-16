@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  # Allows for the workflow to be manually started through the GitHub UI
+  workflow_dispatch:
+
+jobs:
+  crowdin-contributor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Contexts and Secrets
+        run: |
+          echo "[Contexts]"
+          echo "github.job = ${{ github.job }}"
+          echo "github.ref = ${{ github.ref }}"
+          echo "github.ref_name = ${{ github.ref_name }}"
+          echo "github.event_name = ${{ github.event_name }}"
+          echo "[Secrets]"
+          echo "secrets.GITHUB_TOKEN = ${{ secrets.GITHUB_TOKEN }}"
+          echo "secrets.CROWDIN_PERSONAL_TOKEN = ${{ secrets.CROWDIN_PERSONAL_TOKEN }}"
+          echo "secrets.APP_ID = ${{ secrets.APP_ID }}"
+          echo "secrets.APP_PRIVATE_KEY = ${{ secrets.APP_PRIVATE_KEY }}"
+
+      - name: Checkout to '${{ github.ref }}'
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Install the Prerequisites
+        run: |
+          sudo apt install \
+            python3 \
+            python3-pip \
+            python3-sphinx \
+            python3-virtualenv \
+            imagemagick \
+            dvipng \
+            latexmk \
+            librsvg2-bin \
+            texlive-lang-chinese
+
+      - name: Build Linux Kernel Documentation
+        run: |
+          git clone --depth=1 --branch=v6.8 https://github.com/torvalds/linux.git linux
+          cd linux
+          ./scripts/sphinx-pre-install
