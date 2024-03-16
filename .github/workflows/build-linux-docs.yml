@@ -1,11 +1,11 @@
-name: ci
+name: build-linux-docs
 
 on:
   # Allows for the workflow to be manually started through the GitHub UI
   workflow_dispatch:
 
 jobs:
-  crowdin-contributor:
+  build-linux-docs:
     runs-on: ubuntu-latest
     steps:
       - name: Check Contexts and Secrets
