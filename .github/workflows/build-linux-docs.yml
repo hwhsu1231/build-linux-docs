@@ -36,17 +36,17 @@ jobs:
         run: |
           sudo apt update
           sudo apt install \
+            dvipng \
+            fonts-noto-cjk \
+            graphviz \
+            imagemagick \
+            latexmk \
+            librsvg2-bin \
             python3 \
             python3-pip \
             python3-sphinx \
             python3-virtualenv \
-            imagemagick \
-            dvipng \
-            latexmk \
-            librsvg2-bin \
             texlive-lang-chinese \
-            graphviz \
-            fonts-noto-cjk \
             texlive-xetex
 
       - name: Build Linux Kernel Documentation
@@ -54,3 +54,4 @@ jobs:
           git clone --depth=1 --branch=v6.8 https://github.com/torvalds/linux.git linux
           cd linux
           ./scripts/sphinx-pre-install
+          make htmldocs
