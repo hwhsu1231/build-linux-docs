@@ -75,13 +75,13 @@ jobs:
           #   cp $(if $(patsubst /%,,$(DOCS_CSS)),$(abspath $(srctree)/$(DOCS_CSS)),$(DOCS_CSS)) $(BUILDDIR)/$3/_static/; \
           # fi
           sphinx-build \
-          -b html
-          -c Documentation
-          -D version=6.8.0
-          -D release=6.8.0
-          -D kerneldoc_srctree=$(cwd)
-          -D kerneldoc_bin=$(cwd)/scripts/kernel-doc
-          $(cwd)/Documentation
+          -b html \
+          -c Documentation \
+          -D version=6.8.0 \
+          -D release=6.8.0 \
+          -D kerneldoc_srctree=$(cwd) \
+          -D kerneldoc_bin=$(cwd)/scripts/kernel-doc \
+          $(cwd)/Documentation \
           $(cwd)/Documentation/output
 
 
